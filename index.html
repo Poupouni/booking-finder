@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Finder</title>
+  <style>
+    body { font-family: Arial; background:#111; color:#fff; padding:20px; }
+    input, button { padding:10px; font-size:16px; }
+    .result { background:#222; margin-top:20px; padding:15px; border-radius:8px; }
+    a { color:#4af; }
+  </style>
+</head>
+<body>
+
+<h1>🎸 Booking Finder</h1>
+<p>Entre le nom d’une salle / festival :</p>
+
+<input id="query" placeholder="Le Silex Auxerre">
+<button onclick="search()">Chercher</button>
+
+<div id="results"></div>
+
+<script>
+async function search() {
+  const q = document.getElementById("query").value;
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "🔎 Recherche en cours...";
+
+  const url = `https://api.allorigins.win/get?url=${encodeURIComponent(
+    "https://duckduckgo.com/html/?q=" + q + " contact booking email téléphone"
+  )}`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  const text = data.contents;
+
+  const emails = text.match(/[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/g) || [];
+  const phones = text.match(/\+?\d[\d\s().-]{8,}\d/g) || [];
+
+  resultsDiv.innerHTML = `
+    <div class="result">
+      <h3>Résultats pour : ${q}</h3>
+
+      <b>📧 Emails :</b><br>
+      ${[...new Set(emails)].join("<br>") || "Aucun trouvé"}
+
+      <br><br>
+
+      <b>📞 Téléphones :</b><br>
+      ${[...new Set(phones)].join("<br>") || "Aucun trouvé"}
+
+      <br><br>
+
+      <b>🔗 Recherches utiles :</b><br>
+      <a target="_blank" href="https://www.google.com/search?q=${encodeURIComponent(q + " booking")}">Google Booking</a><br>
+      <a target="_blank" href="https://www.instagram.com/explore/tags/${q.replace(/\s/g,"")}">Instagram</a>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>

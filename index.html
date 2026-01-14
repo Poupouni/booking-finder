@@ -1,61 +1,90 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Booking Finder</title>
-  <style>
-    body { font-family: Arial; background:#111; color:#fff; padding:20px; }
-    input, button { padding:10px; font-size:16px; }
-    .result { background:#222; margin-top:20px; padding:15px; border-radius:8px; }
-    a { color:#4af; }
-  </style>
+<meta charset="UTF-8">
+<title>Booking Finder PRO MAX</title>
+<style>
+body { font-family: Arial; background:#0f0f0f; color:#fff; padding:20px; }
+input, button, textarea { padding:10px; font-size:16px; margin:5px 0; width:100%; }
+button { background:#e91e63; color:white; border:none; cursor:pointer; }
+.section { background:#1b1b1b; padding:15px; border-radius:10px; margin-top:20px; }
+a { color:#4af; text-decoration:none; display:block; margin:5px 0; }
+h2 { color:#ff4081; }
+.small { font-size:13px; color:#aaa; }
+</style>
 </head>
 <body>
 
-<h1>🎸 Booking Finder</h1>
+<h1>🎸 Booking Finder PRO MAX</h1>
 <p>Entre le nom d’une salle / festival :</p>
 
 <input id="query" placeholder="Le Silex Auxerre">
-<button onclick="search()">Chercher</button>
+<button onclick="search()">Lancer la recherche</button>
 
 <div id="results"></div>
 
 <script>
-async function search() {
-  const q = document.getElementById("query").value;
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "🔎 Recherche en cours...";
+function search() {
+  const q = document.getElementById("query").value.trim();
+  const r = document.getElementById("results");
 
-  const url = `https://api.allorigins.win/get?url=${encodeURIComponent(
-    "https://duckduckgo.com/html/?q=" + q + " contact booking email téléphone"
-  )}`;
+  if (!q) {
+    r.innerHTML = "Mets un nom frérot 😅";
+    return;
+  }
 
-  const res = await fetch(url);
-  const data = await res.json();
+  const g = encodeURIComponent(q);
 
-  const text = data.contents;
+  r.innerHTML = `
+  <div class="section">
+    <h2>🔍 Recherche générale</h2>
+    <a target="_blank" href="https://www.google.com/search?q=${g}">Google</a>
+    <a target="_blank" href="https://duckduckgo.com/?q=${g}">DuckDuckGo</a>
+  </div>
 
-  const emails = text.match(/[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/g) || [];
-  const phones = text.match(/\+?\d[\d\s().-]{8,}\d/g) || [];
+  <div class="section">
+    <h2>📧 Contacts / Booking</h2>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+contact">Contact</a>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+booking">Booking</a>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+programmation">Programmation</a>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+email">Email</a>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+téléphone">Téléphone</a>
+  </div>
 
-  resultsDiv.innerHTML = `
-    <div class="result">
-      <h3>Résultats pour : ${q}</h3>
+  <div class="section">
+    <h2>🌐 Site officiel</h2>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+site+officiel">Site officiel</a>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+mentions+légales">Mentions légales</a>
+  </div>
 
-      <b>📧 Emails :</b><br>
-      ${[...new Set(emails)].join("<br>") || "Aucun trouvé"}
+  <div class="section">
+    <h2>📱 Réseaux sociaux</h2>
+    <a target="_blank" href="https://www.instagram.com/explore/tags/${q.replace(/\s/g,"")}">Instagram (hashtags)</a>
+    <a target="_blank" href="https://www.facebook.com/search/top?q=${g}">Facebook</a>
+    <a target="_blank" href="https://www.tiktok.com/search?q=${g}">TikTok</a>
+  </div>
 
-      <br><br>
+  <div class="section">
+    <h2>🎶 Styles programmés</h2>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+concert+rock">Rock</a>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+concert+rap">Rap</a>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+concert+reggae">Reggae</a>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+concert+electro">Electro</a>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+concert+metal">Metal</a>
+  </div>
 
-      <b>📞 Téléphones :</b><br>
-      ${[...new Set(phones)].join("<br>") || "Aucun trouvé"}
+  <div class="section">
+    <h2>📍 Infos pratiques</h2>
+    <a target="_blank" href="https://www.google.com/maps/search/${g}">Adresse (Maps)</a>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+capacité">Capacité</a>
+    <a target="_blank" href="https://www.google.com/search?q=${g}+association">Association / structure</a>
+  </div>
 
-      <br><br>
-
-      <b>🔗 Recherches utiles :</b><br>
-      <a target="_blank" href="https://www.google.com/search?q=${encodeURIComponent(q + " booking")}">Google Booking</a><br>
-      <a target="_blank" href="https://www.instagram.com/explore/tags/${q.replace(/\s/g,"")}">Instagram</a>
-    </div>
+  <div class="section">
+    <h2>📋 Zone de copie</h2>
+    <textarea rows="6" placeholder="Colle ici l’email, le tel, le site, le style..."></textarea>
+    <p class="small">Copie-colle direct dans ton tableau OpenOffice / Google Sheets</p>
+  </div>
   `;
 }
 </script>
